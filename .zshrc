@@ -122,7 +122,7 @@ fpath=("${ASDF_DIR}/completions" $fpath)
 autoload -Uz compinit
 compinit -i
 
-alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+# alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
