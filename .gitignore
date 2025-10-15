@@ -1,0 +1,4 @@
+.claude/todos/*
+.claude-code-router/claude-code-router.log
+.claude-code-router/logs/*
+.claude/projects/*
