@@ -14,7 +14,7 @@ ripgrep = "15.1.0"
 starship = "1.24.2"
 zellij = "0.44.0"
 zoxide = "0.9.8"
-opencode = "1.2.27"
+opencode = "1.16.2"
 "github:peteonrails/voxtype" = { version = "0.7.1", asset_pattern = "voxtype-*-linux-x86_64-onnx-avx512" }
 difftastic = "0.67.0"
 "github:twpayne/chezmoi" = "2.70.0"
@@ -22,6 +22,7 @@ difftastic = "0.67.0"
 "github:neovim/neovim" = "0.12.0"
 "npm:@earendil-works/pi-coding-agent" = "0.78.0"
 "github:abiosoft/colima" = { version = "0.10.1", bin = "colima" }
+"npm:@anthropic-ai/claude-code" = "2.1.165"
 
 [settings]
 experimental = true
