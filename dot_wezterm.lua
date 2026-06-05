@@ -19,8 +19,8 @@ config.font = wezterm.font("Departure Mono")
 config.font_size = 13
 
 -- Slightly transparent and blurred background
-config.window_background_opacity = 0.9
-config.macos_window_background_blur = 10
+config.window_background_opacity = 0.7
+config.macos_window_background_blur = 30
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
 -- On macOS, 'RESIZE|INTEGRATED_BUTTONS' also looks nice if
@@ -185,7 +185,7 @@ config.keys = {
 			-- first keypress.
 			one_shot = false,
 			-- Deactivate the keytable after a timeout.
-			timeout_milliseconds = 1000,
+			timeout_milliseconds = 2000,
 		}),
 	},
 
