@@ -1,1 +1,8 @@
 onboarding = false
+
+[theme]
+name = "terminal"
+
+[keys]
+prefix = "ctrl+space"
+
