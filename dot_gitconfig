@@ -1,7 +1,10 @@
 [user]
 	name = Kingsley Obi
   email = mofuobi@gmail.com
+  signingkey = 3AA5C34371567BD2
 
+[commit]
+    gpgsign = true
 
 [init]
 	defaultBranch = main
