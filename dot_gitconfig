@@ -1,7 +1,7 @@
 [user]
 	name = Kingsley Obi
   email = mofuobi@gmail.com
-  signingkey = 3AA5C34371567BD2
+  signingkey = 20AA61297F66AF38
 
 [commit]
     gpgsign = true
