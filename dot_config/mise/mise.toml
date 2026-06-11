@@ -24,6 +24,7 @@ difftastic = "0.67.0"
 "github:abiosoft/colima" = { version = "0.10.1", bin = "colima" }
 "npm:@anthropic-ai/claude-code" = "2.1.165"
 "github:can1357/oh-my-pi" = "15.9.5"
+"github:anomalyco/opencode" = "1.16.2"
 
 # Configuration for Apple Silicon (macOS arm64)
 [env-only.darwin-arm64.tools]
