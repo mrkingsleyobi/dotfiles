@@ -25,6 +25,17 @@ difftastic = "0.67.0"
 "npm:@anthropic-ai/claude-code" = "2.1.165"
 "github:can1357/oh-my-pi" = "15.9.5"
 
+# Configuration for Apple Silicon (macOS arm64)
+[env-only.darwin-arm64.tools]
+bun = "1.3.14"
+
+# Configuration for Linux (both x86_64 and arm64)
+[env-only.linux-x64.tools]
+bun = "1.3.14"
+
+[env-only.linux-arm64.tools]
+bun = "1.3.14"
+
 [settings]
 experimental = true
 lockfile = true
