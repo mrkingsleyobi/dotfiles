@@ -19,8 +19,8 @@ config.font = wezterm.font("Departure Mono")
 config.font_size = 13
 
 -- Slightly transparent and blurred background
-config.window_background_opacity = 0.7
-config.macos_window_background_blur = 30
+config.window_background_opacity = 0.8
+config.macos_window_background_blur = 50
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
 -- On macOS, 'RESIZE|INTEGRATED_BUTTONS' also looks nice if
@@ -32,7 +32,7 @@ config.window_frame = {
 	-- Berkeley Mono for me again, though an idea could be to try a
 	-- serif font here instead of monospace for a nicer look?
 	font = wezterm.font({ family = "Departure Mono", weight = "Bold" }),
-	font_size = 11,
+	font_size = 13,
 }
 
 local function segments_for_right_status(window)
@@ -286,7 +286,7 @@ config.keys = {
 -- ============================================
 
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
+config.tab_bar_at_bottom = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_and_split_indices_are_zero_based = true
 
