@@ -1,8 +1,11 @@
 -- vim: tabstop=2 shiftwidth=2 expandtab
 
 local wezterm = require("wezterm")
+
 local config = wezterm.config_builder()
+
 local appearance = require("appearance")
+
 local projects = require("projects")
 
 config.set_environment_variables = {
@@ -19,20 +22,22 @@ config.font = wezterm.font("Departure Mono")
 config.font_size = 13
 
 -- Slightly transparent and blurred background
-config.window_background_opacity = 0.8
-config.macos_window_background_blur = 50
+config.window_background_opacity = 0.7
+config.macos_window_background_blur = 30
+
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
 -- On macOS, 'RESIZE|INTEGRATED_BUTTONS' also looks nice if
 -- you want to keep the window controls visible and integrate
 -- them into the tab bar.
 config.window_decorations = "RESIZE"
+
 -- Sets the font for the window frame (tab bar)
 config.window_frame = {
 	-- Berkeley Mono for me again, though an idea could be to try a
 	-- serif font here instead of monospace for a nicer look?
 	font = wezterm.font({ family = "Departure Mono", weight = "Bold" }),
-	font_size = 13,
+	font_size = 11,
 }
 
 local function segments_for_right_status(window)
@@ -45,19 +50,23 @@ end
 
 wezterm.on("update-status", function(window, _)
 	local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
+
 	local segments = segments_for_right_status(window)
 
 	local color_scheme = window:effective_config().resolved_palette
+
 	-- Note the use of wezterm.color.parse here, this returns
 	-- a Color object, which comes with functionality for lightening
 	-- or darkening the colour (amongst other things).
 	local bg = wezterm.color.parse(color_scheme.background)
+
 	local fg = color_scheme.foreground
 
 	-- Each powerline segment is going to be coloured progressively
 	-- darker/lighter depending on whether we're on a dark/light colour
 	-- scheme. Let's establish the "from" and "to" bounds of our gradient.
 	local gradient_to, gradient_from = bg, bg
+
 	if appearance.is_dark() then
 		gradient_from = gradient_to:lighten(0.2)
 	else
@@ -85,11 +94,15 @@ wezterm.on("update-status", function(window, _)
 		if is_first then
 			table.insert(elements, { Background = { Color = "none" } })
 		end
+
 		table.insert(elements, { Foreground = { Color = gradient[i] } })
+
 		table.insert(elements, { Text = SOLID_LEFT_ARROW })
 
 		table.insert(elements, { Foreground = { Color = fg } })
+
 		table.insert(elements, { Background = { Color = gradient[i] } })
+
 		table.insert(elements, { Text = " " .. seg .. " " })
 	end
 
@@ -116,8 +129,15 @@ end
 -- the start of a line
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 
--- Table mapping keypresses to actions
+-- ============================================
+-- Keybindings (MERGED - Fixed duplicate assignment)
+-- ============================================
+
 config.keys = {
+	-- ============================================
+	-- Navigation & Shell Integration
+	-- ============================================
+
 	-- Sends ESC + b and ESC + f sequence, which is used
 	-- for telling your shell to jump back/forward.
 	{
@@ -129,11 +149,16 @@ config.keys = {
 		-- to the terminal
 		action = wezterm.action.SendString("\x1bb"),
 	},
+
 	{
 		key = "RightArrow",
 		mods = "OPT",
 		action = wezterm.action.SendString("\x1bf"),
 	},
+
+	-- ============================================
+	-- Config Management
+	-- ============================================
 
 	{
 		key = ",",
@@ -143,6 +168,10 @@ config.keys = {
 			args = { "nvim", wezterm.config_file },
 		}),
 	},
+
+	-- ============================================
+	-- Pane Management (Leader-based, tmux-style)
+	-- ============================================
 
 	{
 		-- I'm used to tmux bindings, so am using the quotes (") key to
@@ -155,6 +184,7 @@ config.keys = {
 		mods = "LEADER",
 		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
+
 	{
 		key = "%",
 		mods = "LEADER",
@@ -163,7 +193,7 @@ config.keys = {
 
 	{
 		key = "a",
-		-- When we're in leader mode _and_ CTRL + A is pressed...
+		-- When we're in leader mode and CTRL + A is pressed...
 		mods = "LEADER|CTRL",
 		-- Actually send CTRL + A key to the terminal
 		action = wezterm.action.SendKey({ key = "a", mods = "CTRL" }),
@@ -178,7 +208,7 @@ config.keys = {
 		-- When we push LEADER + R...
 		key = "r",
 		mods = "LEADER",
-		-- Activate the `resize_panes` keytable
+		-- Activate the resize_panes keytable
 		action = wezterm.action.ActivateKeyTable({
 			name = "resize_panes",
 			-- Ensures the keytable stays active after it handles its
@@ -195,34 +225,27 @@ config.keys = {
 		-- Present in to our project picker
 		action = projects.choose_project(),
 	},
+
 	{
 		key = "f",
 		mods = "LEADER",
 		-- Present a list of existing workspaces
 		action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
 	},
-}
 
-config.key_tables = {
-	resize_panes = {
-		resize_pane("j", "Down"),
-		resize_pane("k", "Up"),
-		resize_pane("h", "Left"),
-		resize_pane("l", "Right"),
-	},
-}
+	-- ============================================
+	-- Project Switcher (CTRL+SHIFT)
+	-- ============================================
 
--- ============================================
--- Keybindings
--- ============================================
-
-config.keys = {
-	-- Project switcher
 	{
 		key = "p",
 		mods = "CTRL|SHIFT",
 		action = projects.choose_project(),
 	},
+
+	-- ============================================
+	-- Tab Management (CTRL+SHIFT)
+	-- ============================================
 
 	-- New tab
 	{
@@ -238,7 +261,11 @@ config.keys = {
 		action = wezterm.action.CloseCurrentTab({ confirm = true }),
 	},
 
-	-- Split pane horizontally
+	-- ============================================
+	-- Pane Splitting (CTRL+SHIFT)
+	-- ============================================
+
+	-- Split pane horizontally (right)
 	{
 		key = "d",
 		mods = "CTRL|SHIFT",
@@ -248,7 +275,7 @@ config.keys = {
 		}),
 	},
 
-	-- Split pane vertically
+	-- Split pane vertically (down)
 	{
 		key = "e",
 		mods = "CTRL|SHIFT",
@@ -258,26 +285,41 @@ config.keys = {
 		}),
 	},
 
-	-- Navigate panes
+	-- ============================================
+	-- Pane Navigation (CTRL+SHIFT + Arrow Keys)
+	-- ============================================
+
 	{
 		key = "LeftArrow",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Left"),
 	},
+
 	{
 		key = "RightArrow",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Right"),
 	},
+
 	{
 		key = "UpArrow",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Up"),
 	},
+
 	{
 		key = "DownArrow",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.ActivatePaneDirection("Down"),
+	},
+}
+
+config.key_tables = {
+	resize_panes = {
+		resize_pane("j", "Down"),
+		resize_pane("k", "Up"),
+		resize_pane("h", "Left"),
+		resize_pane("l", "Right"),
 	},
 }
 
@@ -286,7 +328,7 @@ config.keys = {
 -- ============================================
 
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = false
+config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_and_split_indices_are_zero_based = true
 
