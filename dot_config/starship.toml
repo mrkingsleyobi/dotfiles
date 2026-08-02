@@ -36,6 +36,7 @@ $cmd_duration\
 $character"""
 
 palette = 'catppuccin_mocha'
+scan_timeout = 300
 
 [os]
 disabled = false
@@ -296,7 +297,7 @@ style = "bg:lavender fg:crust"
 format = "[](lavender)[$ssh_symbol$hostname]($style)[ ](fg:lavender)"
 
 [sudo]
-disabled = false
+disabled = true
 symbol = "⚠️"
 style = "bg:lavender fg:crust"
 format = "[](lavender)[$symbol]($style)[ ](fg:lavender)"
