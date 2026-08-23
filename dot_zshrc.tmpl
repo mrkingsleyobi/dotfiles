@@ -121,7 +121,60 @@ fi
 alias ls='ls --color'
 alias vim='nvim'
 alias c='clear'
-
-eval "$(omp completions zsh)"
+alias h='herdr'
 
 export GPG_TTY=$(tty)
+
+
+export GPG_TTY=$(tty)
+
+# Dockerized Bun for Intel/x86_64 Macs.
+# Override this if you want to pin a specific Bun image version.
+: "${BUN_DOCKER_IMAGE:=oven/bun:1}"
+
+_bun_docker_run() {
+  local entrypoint="$1"
+  shift
+
+  # Keep Bun cache and Linux node_modules outside the project directory.
+  # This avoids mixing macOS and Linux native dependencies.
+  local cache_root="${BUN_DOCKER_CACHE:-$HOME/.cache/docker-bun}"
+  local project_hash
+  project_hash="$(printf '%s' "$PWD" | shasum -a 256 | awk '{print substr($1, 1, 20)}')"
+
+  local modules_dir="$cache_root/node_modules/$project_hash"
+  mkdir -p "$cache_root/cache" "$modules_dir"
+
+  # Allocate a TTY only for interactive terminals.
+  local tty_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_args=(-t)
+  fi
+
+  docker run --rm --name bun --init -i "${tty_args[@]}" \
+    --platform linux/amd64 \
+    --user "$(id -u):$(id -g)" \
+    --mount "type=bind,source=$PWD,target=/workspace" \
+    --mount "type=bind,source=$cache_root/cache,target=/bun-cache" \
+    --mount "type=bind,source=$modules_dir,target=/workspace/node_modules" \
+    --workdir /workspace \
+    -e HOME=/tmp \
+    -e BUN_INSTALL_CACHE_DIR=/bun-cache \
+    --entrypoint "$entrypoint" \
+    "$BUN_DOCKER_IMAGE" "$@"
+}
+
+# Use Bun as if it were installed locally.
+bun() {
+  _bun_docker_run /usr/local/bin/bun "$@"
+}
+
+# Enter a shell inside the Bun container, mounted at the current project.
+bunsh() {
+  _bun_docker_run /bin/bash "$@"
+}
+
+# eval "$(omp completions zsh)"
+
+BWS_ACCESS_TOKEN="0.ae78d779-2f65-4d69-8306-b4aa009923eb.ruhiV13ggMmwyFpSgyNRrTLyRvVgUj:JSxeS9jtpxcMPIwkGsPoNw=="
+BW_SESSION="auOz6QrqLWxGNkRQQbjUjaVunTRAuVFmUz2rgnfCt2hIuK7caUOhFqdfJom6V31+kUtrM5XpG78QznVLPeJMHg=="
